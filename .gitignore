@@ -1,0 +1,7 @@
+
+debug
+logs/
+portal.exe
+config.toml
+*.exe~
+*.json
