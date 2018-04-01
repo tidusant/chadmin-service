@@ -5,3 +5,4 @@ portal.exe
 config.toml
 *.exe~
 *.json
+service.exe

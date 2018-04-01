@@ -108,7 +108,22 @@ func myRoute(c *gin.Context, param string) string {
 			LabelID := args[5]
 			status := rpch.GetStatusByPartnerStatus(partnercode, shopid, statusid)
 			if status.ID.Hex() != "" {
-				rpch.UpdateOrderStatusByShipmentCode(LabelID, status.ID.Hex(), shopid)
+				order := rpch.GetOrderByShipmentCode(LabelID, shopid)
+				if order.ID.Hex() != "" {
+					oldstat := rpch.GetStatusByID(order.Status, shopid)
+					if oldstat.Export != status.Export {
+						//update stock
+						sign := 1
+						if oldstat.Export {
+							sign = -1
+						}
+						for _, v := range order.Items {
+							rpch.ExportItem(shopid, v.ProdCode, v.Code, v.Num*sign)
+						}
+					}
+					rpch.UpdateOrderStatusByShipmentCode(LabelID, status.ID.Hex(), shopid)
+				}
+
 			}
 		}
 
