@@ -123,7 +123,6 @@ func myRoute(c *gin.Context, param string) string {
 					}
 					rpch.UpdateOrderStatusByShipmentCode(LabelID, status.ID.Hex(), shopid)
 				}
-
 			}
 		}
 
