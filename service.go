@@ -10,11 +10,9 @@ import (
 	"github.com/tidusant/c3m-common/mycrypto"
 	rpch "github.com/tidusant/chadmin-repo/cuahang"
 	rpsex "github.com/tidusant/chadmin-repo/session"
-
 	//"io"
 	"net"
 	"net/http"
-
 	//	"os"
 	"strconv"
 	"strings"
@@ -85,7 +83,9 @@ func main() {
 			strrt = c3mcommon.Fake64()
 		}
 		c.String(http.StatusOK, strrt)
+
 	})
+
 	router.Run(":" + strconv.Itoa(port))
 
 }
@@ -94,7 +94,6 @@ func myRoute(c *gin.Context, param string) string {
 	strrt := ""
 	userIP, _, _ := net.SplitHostPort(c.Request.RemoteAddr)
 	args := strings.Split(param, "|")
-	log.Debugf("request: %s", param)
 	if len(args) < 2 {
 		return ""
 	}
@@ -117,13 +116,6 @@ func myRoute(c *gin.Context, param string) string {
 			}
 		}
 
-	} else if RPCname == "login" {
-		if len(args) < 4 {
-			return ""
-		}
-		username := args[2]
-		password := args[3]
-		strrt = rpch.Login(username, password, session, userIP)
 	} else {
 		//check login
 		sessioninfo := rpch.GetLogin(session, userIP)
@@ -133,8 +125,7 @@ func myRoute(c *gin.Context, param string) string {
 		tmps := strings.Split(sessioninfo, "[+]")
 		userid := tmps[0]
 		shopid := tmps[1]
-
-		log.Debugf("RPCname: %s, userid:%s, shopid:%s", RPCname, userid, shopid)
+		log.Debugf("RPCname: %s", RPCname)
 		if RPCname == "aut" {
 			//check login
 			log.Debugf("customer %s", sessioninfo)
@@ -144,39 +135,19 @@ func myRoute(c *gin.Context, param string) string {
 			strphone := ""
 			for _, v := range cuss {
 				strphone += v.Phone + ","
+
 			}
 			return strphone
 
 		} else if RPCname == "loadshopalbum" {
 			shop := rpch.GetShopById(userid, shopid)
 			strrt := "{\"\":\"\""
+
 			for _, album := range shop.Albums {
 				strrt += ",\"" + album.Slug + "\":\"" + album.Name + "\""
 			}
 			strrt += "}"
 			return strrt
-		} else if RPCname == "possync" {
-			if len(args) < 3 {
-				return ""
-			}
-			return posSync(userid, shopid, args[2])
-
-		} else if RPCname == "possyncupdate" {
-			if len(args) < 3 {
-				return ""
-			}
-			return posSyncUpdate(userid, shopid, args[2])
-
-		} else if RPCname == "posgetshopinfo" {
-
-			return posGetShopInfo(userid, shopid)
-
-		} else if RPCname == "posgetimagethumb" {
-			if len(args) < 3 {
-				return ""
-			}
-			return posGetImageThumb(userid, shopid, args[2])
-
 		}
 	}
 	return strrt
