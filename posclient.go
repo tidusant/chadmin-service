@@ -7,10 +7,10 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/tidusant/c3m-common/mycrypto"
+	// "github.com/tidusant/c3m-common/mycrypto"
 
-	"github.com/tidusant/c3m-common/c3mcommon"
-	"github.com/tidusant/chadmin-repo/models"
+	// "github.com/tidusant/c3m-common/c3mcommon"
+	// "github.com/tidusant/chadmin-repo/models"
 
 	"github.com/spf13/viper"
 	rpch "github.com/tidusant/chadmin-repo/cuahang"
@@ -20,61 +20,61 @@ import (
 func posSync(userid, shopid, posname string) string {
 	//sync product
 
-	PData := struct {
-		Employees []models.Employee
-		Products  []models.Product
-		Cats      []models.ProdCat
-		PosClient models.PosClient
-	}{}
-	//get posclient
-	pos := rpch.GetPosClient(userid, shopid, posname)
-	if pos.UserId == userid && pos.ShopId == shopid {
-		//get all not sync product
-		prods := rpch.GetSyncProds(userid, shopid)
-		PData.Products = prods
-		//get all cat
-		cats := rpch.GetSyncCats(userid, shopid)
-		PData.Cats = cats
-		//get all cat
-		empls := rpch.GetSyncEmployees(userid, shopid)
-		PData.Employees = empls
-		if pos.IsSync {
-			PData.PosClient = pos
-		}
-		info, _ := json.Marshal(PData)
-		return string(info)
-	}
+	// PData := struct {
+	// 	Employees []models.Employee
+	// 	Products  []models.Product
+	// 	Cats      []models.ProdCat
+	// 	PosClient models.PosClient
+	// }{}
+	// //get posclient s
+	// pos := rpch.GetPosClient(userid, shopid, posname)
+	// if pos.UserId == userid && pos.ShopId == shopid {
+	// 	//get all not sync product
+	// 	prods := rpch.GetSyncProds(userid, shopid)
+	// 	PData.Products = prods
+	// 	//get all cat
+	// 	cats := rpch.GetSyncCats(userid, shopid)
+	// 	PData.Cats = cats
+	// 	//get all cat
+	// 	empls := rpch.GetSyncEmployees(userid, shopid)
+	// 	PData.Employees = empls
+	// 	if pos.IsSync {
+	// 		PData.PosClient = pos
+	// 	}
+	// 	info, _ := json.Marshal(PData)
+	// 	return string(info)
+	// }
 	return ""
 }
 
 func posSyncUpdate(userid, shopid, params string) string {
 	//sync product
-	data := mycrypto.Base64Decode(params)
-	PData := struct {
-		Employees []string
-		Products  []string
-		Cats      []string
-		PosClient models.PosClient
-	}{}
-	err := json.Unmarshal([]byte(data), &PData)
-	if c3mcommon.CheckError("Fail to parse syncupdate", err) {
-		//get posclient
-		pos := rpch.GetPosClient(userid, shopid, PData.PosClient.Name)
-		if pos.UserId == userid && pos.ShopId == shopid {
-			if len(PData.Cats) > 0 {
-				rpch.UpdateSyncCats(userid, shopid, PData.Cats)
-			}
-			if len(PData.Products) > 0 {
-				rpch.UpdateSyncProds(userid, shopid, PData.Products)
-			}
-			if len(PData.Employees) > 0 {
-				rpch.UpdateSyncEmployees(userid, shopid, PData.Employees)
-			}
-			if pos.IsSync == false {
-				rpch.UpdateSyncPosClient(userid, shopid, pos.Name)
-			}
-		}
-	}
+	// data := mycrypto.Base64Decode(params)
+	// PData := struct {
+	// 	Employees []string
+	// 	Products  []string
+	// 	Cats      []string
+	// 	PosClient models.PosClient
+	// }{}
+	// err := json.Unmarshal([]byte(data), &PData)
+	// if c3mcommon.CheckError("Fail to parse syncupdate", err) {
+	// 	//get posclient
+	// 	pos := rpch.GetPosClient(userid, shopid, PData.PosClient.Name)
+	// 	if pos.UserId == userid && pos.ShopId == shopid {
+	// 		if len(PData.Cats) > 0 {
+	// 			rpch.UpdateSyncCats(userid, shopid, PData.Cats)
+	// 		}
+	// 		if len(PData.Products) > 0 {
+	// 			rpch.UpdateSyncProds(userid, shopid, PData.Products)
+	// 		}
+	// 		if len(PData.Employees) > 0 {
+	// 			rpch.UpdateSyncEmployees(userid, shopid, PData.Employees)
+	// 		}
+	// 		if pos.IsSync == false {
+	// 			rpch.UpdateSyncPosClient(userid, shopid, pos.Name)
+	// 		}
+	// 	}
+	// }
 	return ""
 }
 func posGetImageThumb(userid, shopid, imageid string) string {
